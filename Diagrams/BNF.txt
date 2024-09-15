@@ -1,0 +1,44 @@
+programa ::= ( '#include' declaracion-include )* ( 'using' declaracion-using ';' )* ( 'const' declaracion-const ';' )* ( ('int' | 'double' | 'bool' | 'string' | 'void' ) declaracion-fn )+ 'EOF'
+
+declaracion-include ::= '<' ( 'iostream' | 'cmath' ) '>'
+
+declaracion-using-namespace ::= 'namespace' 'std'
+
+declaracion-const ::= 'int' 'IDENT' '=' 'NUMERO'
+
+declaracion-fn ::= 'IDENT' '(' ( ('int' | 'double' | 'bool' | 'string' ) ( '&' )? 'IDENT' ( ',' ('int' | 'double' | 'bool' | 'string' ) ( '&' )? 'IDENT' )* )? ')' proposicion-compuesta
+
+proposicion-compuesta ::=  '{' ( proposicion )* '}'
+
+proposicion ::= 
+     ('int' | 'double' | 'bool' | 'string' )? 'IDENT' ( ( '=' | '+=' | '-=' | '*=' | '/=' | '%=' ) expresion )? ';' |
+     expresion ';' |
+     'return' expresion ';' |
+     'getline' '(' 'cin' ',' 'IDENT' ')' ';' | 
+     'cout' '<<' ( expresion | 'endl' ) ( '<<' ( expresion | 'endl' ) )* ';' |
+     proposicion-compuesta |
+     'if' '(' expresion ')' proposicion ( 'else' proposicion )? |
+     'while' '(' expresion ')' proposicion
+
+expresion ::= expresion-and ( '||' expresion-and )*
+
+expresion-and ::= expresion-igualdad ( '&&' expresion-igualdad )*
+
+expresion-igualdad ::= expresion-relacional ( ( '==' | '!=' ) expresion-relacional )*
+
+expresion-relacional ::= expresion-aditiva ( ( '>' | '>=' | '<' | '<=' ) expresion-aditiva )*
+
+expresion-aditiva ::= expresion-multiplicativa ( ( '+' | '-' ) expresion-multiplicativa )*
+
+expresion-multiplicativa ::= expresion-unaria ( ( '*' | '/' | '%' ) expresion-unaria )*
+
+expresion-unaria ::= ( '+' | '-' | '!' )? expresion-atomica
+
+expresion-atomica ::=
+     'NUMERO' |
+     'CADENA' |
+     'BOOLEANO' |
+     'IDENT' ( ( '(' ( expresion ( ',' expresion )* )? ')' ) | ( '.' 'substr' '(' expresion ',' expresion ')' ) )? |
+     ( 'sqrt' | 'sin' | 'atan' | 'abs' | 'stoi' | 'stof' ) '(' expresion ')' |
+     '(' expresion ')'
+
